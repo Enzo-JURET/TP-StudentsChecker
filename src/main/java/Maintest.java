@@ -1,4 +1,3 @@
-import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -6,32 +5,32 @@ public class Maintest {
 
     public static void main(String[] args)throws SQLException{
 
-        Eleves eleves = new Eleves();
-        eleves.setPrenomEleve("ayman");
-        eleves.setNomEleve("agharbi");
-        eleves.setDateNaissance("1998-05-14");
-        eleves.setIdClasse(1);
-        ElevesDao alevesDao = new ElevesDao();
+        Eleve eleve = new Eleve();
+        eleve.setPrenomEleve("ayman");
+        eleve.setNomEleve("agharbi");
+        eleve.setDateNaissance("1998-05-14");
+        eleve.setIdClasse(1);
+        EleveDao alevesDao = new EleveDao();
 
         // add
-        alevesDao.add(eleves);
+        alevesDao.add(eleve);
 
         // read
-        Eleves ele = alevesDao.getEleve(1);
+        Eleve ele = alevesDao.getEleve(5);
         System.out.println(ele.toString());
 
         // read All
-        List<Eleves> ls = alevesDao.getEleves();
-        for (Eleves allele : ls) {
+        List<Eleve> ls = alevesDao.getEleves();
+        for (Eleve allele : ls) {
             System.out.println(allele);
         }
 
         // update
-        Eleves tempEleve = alevesDao.getEleve(1);
+        Eleve tempEleve = alevesDao.getEleve(4);
         tempEleve.setNomEleve("Asgard");
         alevesDao.update(tempEleve);
 
         // delete
-        alevesDao.delete(1);
+        alevesDao.delete(5);
     }
 }

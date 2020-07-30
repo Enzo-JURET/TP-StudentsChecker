@@ -1,6 +1,6 @@
 import java.sql.Date;
 
-public class Eleves {
+public class Eleve {
 
     private int idEleve;
     private String nomEleve;
@@ -8,20 +8,20 @@ public class Eleves {
     private String dateNaissance;
     private int idClasse;
 
-    public Eleves(String nomEleve, String prenomEleve, String dateNaissance, int idClasse) {
+    public Eleve(String nomEleve, String prenomEleve, String dateNaissance, int idClasse) {
         this.nomEleve = nomEleve;
         this.prenomEleve = prenomEleve;
         this.dateNaissance = dateNaissance;
         this.idClasse = idClasse;
     }
 
-    public Eleves(String nomEleve, String prenomEleve, String dateNaissance) {
+    public Eleve(String nomEleve, String prenomEleve, String dateNaissance) {
         this.nomEleve = nomEleve;
         this.prenomEleve = prenomEleve;
         this.dateNaissance = dateNaissance;
     }
 
-    public Eleves() {
+    public Eleve() {
     }
 
     @Override
