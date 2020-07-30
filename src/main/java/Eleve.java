@@ -26,13 +26,7 @@ public class Eleve {
 
     @Override
     public String toString() {
-        return "Eleves{" +
-                "idEleve=" + idEleve +
-                ", nomEleve='" + nomEleve + '\'' +
-                ", prenomEleve='" + prenomEleve + '\'' +
-                ", dateNaissance=" + dateNaissance +
-                ", idClasse=" + idClasse +
-                '}';
+        return nomEleve + ' '+prenomEleve;
     }
 
     public int getIdEleve() {

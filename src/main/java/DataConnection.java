@@ -31,7 +31,7 @@ public class DataConnection {
         String pass = properties.getProperty("db.password");
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("org.mariadb.jdbc.Driver");
             con = DriverManager.getConnection(url, user, pass);
         }
         catch (ClassNotFoundException | SQLException e) {

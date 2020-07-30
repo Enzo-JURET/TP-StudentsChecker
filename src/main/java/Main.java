@@ -35,32 +35,21 @@ public class Main extends Application {
         window = stage;
         window.setTitle("Demo");
 
+        // To Creating a Observable List
+        ObservableList<Eleve> eleves = FXCollections.observableArrayList();
+
         // READ ALL ELEVES
-        ElevesDao elevesDao = new ElevesDao();
-        List<Eleves> ls = elevesDao.getEleves();
-        for (Eleves allele : ls) {
+        EleveDao elevesDao = new EleveDao();
+        List<Eleve> ls = elevesDao.getEleves();
+        for (Eleve allele : ls) {
             System.out.println(allele);
+            eleves.add(allele);
         }
-
-        Eleves eleve1 = new Eleves();
-        eleve1.setPrenomEleve("ayman");
-        eleve1.setNomEleve("agharbi");
-        eleve1.setDateNaissance("1998-05-14");
-        eleve1.setIdClasse(1);
-
-        Eleves eleve2 = new Eleves();
-        eleve1.setPrenomEleve("ayman");
-        eleve1.setNomEleve("agharbi");
-        eleve1.setDateNaissance("2000-01-24");
-        eleve1.setIdClasse(2);
 
         Label label = new Label();
 
-        // To Creating a Observable List
-        ObservableList<Eleves> eleves = FXCollections.observableArrayList(eleve1, eleve2);
-
         // Create a ListView
-        ListView<Eleves> listView = new ListView<Eleves>(eleves);
+        ListView<Eleve> listView = new ListView<Eleve>(eleves);
         listView.setStyle("-fx-font-size: 1.5em ;");
 
         // Only allowed to select single row in the ListView.
