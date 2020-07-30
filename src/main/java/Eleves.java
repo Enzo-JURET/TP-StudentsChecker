@@ -5,20 +5,23 @@ public class Eleves {
     private int idEleve;
     private String nomEleve;
     private String prenomEleve;
-    private Date dateNaissance;
+    private String dateNaissance;
     private int idClasse;
 
-    public Eleves(String nomEleve, String prenomEleve, Date dateNaissance, int idClasse) {
+    public Eleves(String nomEleve, String prenomEleve, String dateNaissance, int idClasse) {
         this.nomEleve = nomEleve;
         this.prenomEleve = prenomEleve;
         this.dateNaissance = dateNaissance;
         this.idClasse = idClasse;
     }
 
-    public Eleves(String nomEleve, String prenomEleve, Date dateNaissance) {
+    public Eleves(String nomEleve, String prenomEleve, String dateNaissance) {
         this.nomEleve = nomEleve;
         this.prenomEleve = prenomEleve;
         this.dateNaissance = dateNaissance;
+    }
+
+    public Eleves() {
     }
 
     @Override
@@ -56,11 +59,11 @@ public class Eleves {
         this.prenomEleve = prenomEleve;
     }
 
-    public Date getDateNaissance() {
+    public String getDateNaissance() {
         return dateNaissance;
     }
 
-    public void setDateNaissance(Date dateNaissance) {
+    public void setDateNaissance(String dateNaissance) {
         this.dateNaissance = dateNaissance;
     }
 
