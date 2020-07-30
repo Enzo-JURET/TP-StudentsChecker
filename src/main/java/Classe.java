@@ -51,6 +51,7 @@ public class Classe {
         String query = "select * from tpstudentscheckerdb.classe";
         PreparedStatement statement = connection.prepareStatement(query);
         ResultSet resultSet = statement.executeQuery();
+        String resultat = "";
         while(resultSet.next()) {
             System.out.println("Libelle : "+resultSet.getString("libelleClasse")+" | période : "+resultSet.getString("periodeClasse"));
         }
