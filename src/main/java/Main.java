@@ -100,7 +100,6 @@ public class Main extends Application {
                     throwables.printStackTrace();
                 }
                 for (Classe clc : lc) {
-                    System.out.println(clc.getLibelleClasse());
                     classes.add(clc);
                 }
 
@@ -117,6 +116,18 @@ public class Main extends Application {
                     }
                 });
 
+                Button buttonReadClasse = new Button();
+                buttonReadClasse.setText("Consulter la classe");
+
+                Button buttonUpdateClasse = new Button();
+                buttonUpdateClasse.setText("Modifier la classe");
+
+                Button buttonCreateClasse = new Button();
+                buttonCreateClasse.setText("Ajouter une classe");
+
+                Button buttonDeleteClasse = new Button();
+                buttonDeleteClasse.setText("Supprimer la classe");
+
                 StackPane layoutClasses = new StackPane();
 
                 //---Mise en place de grille de placement
@@ -127,13 +138,92 @@ public class Main extends Application {
                 gridPane.add(buttonDeconnexion,0,0);
                 gridPane.add(listViewClasse, 0,1);
                 gridPane.add(buttonEleves,0,2);
+                gridPane.add(buttonReadClasse,0,3);
+                gridPane.add(buttonUpdateClasse,0,4);
+                gridPane.add(buttonCreateClasse,0,5);
+                gridPane.add(buttonDeleteClasse,0,6);
 
                 layoutClasses.getChildren().addAll(gridPane);
 
-                Scene scene = new Scene(layoutClasses, 270, 550);
+                Scene scene = new Scene(layoutClasses, 290, 550);
                 windowClasses.setScene(scene);
                 windowClasses.show();
                 windowConnexion.close();
+
+                buttonReadClasse.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        Number comparateur = -1;
+
+                        if (idClasse != comparateur) {
+                            Classe cla = null;
+                            try {
+                                cla = classeDao.getClasse((Integer) idClasse);
+                            } catch (SQLException throwables) {
+                                throwables.printStackTrace();
+                            }
+                            ClasseDao classeDao = new ClasseDao();
+
+                            Label idLabelClasse = new Label("ID : " + cla.getIdClasse());
+                            Label libelleLabelClasse = new Label("Libelle : " + cla.getLibelleClasse());
+                            Label periodeLabelClasse = new Label("Période : " + cla.getPeriodeClasse());
+
+                            StackPane secondaryLayout = new StackPane();
+
+                            GridPane gridPane = new GridPane();
+                            gridPane.setPadding(new Insets(10, 10, 10, 10));
+                            gridPane.setVgap(8);
+                            gridPane.setHgap(10);
+                            gridPane.add(idLabelClasse, 0, 0);
+                            gridPane.add(libelleLabelClasse, 0, 1);
+                            gridPane.add(periodeLabelClasse, 0, 2);
+
+                            secondaryLayout.getChildren().add(gridPane);
+
+                            Scene secondScene = new Scene(secondaryLayout, 540, 500);
+                            // New window (Stage)
+                            Stage newWindow = new Stage();
+                            newWindow.setTitle("Consultation de la classe " + listViewClasse.getSelectionModel().getSelectedItem().getLibelleClasse());
+                            newWindow.setScene(secondScene);
+                            // Set position of second window, related to primary window.
+                            newWindow.setX(stage.getX() + 200);
+                            newWindow.setY(stage.getY() + 100);
+                            newWindow.show();
+                        }
+                    }
+                });
+
+                buttonUpdateClasse.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                        windowClasses.close();
+                        windowConnexion.show();
+                    }
+                });
+
+                buttonCreateClasse.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        windowClasses.close();
+                        windowConnexion.show();
+                    }
+                });
+
+                buttonDeleteClasse.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        windowClasses.close();
+                        windowConnexion.show();
+                    }
+                });
+
+                buttonDeconnexion.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        windowClasses.close();
+                        windowConnexion.show();
+                    }
+                });
 
                 buttonDeconnexion.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
@@ -161,7 +251,6 @@ public class Main extends Application {
                             throwables.printStackTrace();
                         }
                         for (Eleve allele : ls) {
-                            System.out.println(allele);
                             eleves.add(allele);
                         }
 
@@ -179,17 +268,17 @@ public class Main extends Application {
                             }
                         });
 
-                        Button buttonRead = new Button();
-                        buttonRead.setText("Consulter l'élève");
+                        Button buttonReadEleve = new Button();
+                        buttonReadEleve.setText("Consulter l'élève");
 
-                        Button buttonUpdate = new Button();
-                        buttonUpdate.setText("Modifier l'élève");
+                        Button buttonUpdateEleve = new Button();
+                        buttonUpdateEleve.setText("Modifier l'élève");
 
-                        Button buttonCreate = new Button();
-                        buttonCreate.setText("Ajouter un élève");
+                        Button buttonCreateEleve = new Button();
+                        buttonCreateEleve.setText("Ajouter un élève");
 
-                        Button buttonDelete = new Button();
-                        buttonDelete.setText("Supprimer l'élève");
+                        Button buttonDeleteEleve = new Button();
+                        buttonDeleteEleve.setText("Supprimer l'élève");
 
                         Button buttonRetour = new Button();
                         buttonRetour.setText("Retour à la liste des classe..");
@@ -205,10 +294,10 @@ public class Main extends Application {
                         gridPane.setHgap(10);
                         gridPane.add(buttonRetour, 0, 0);
                         gridPane.add(listViewEleve, 0, 1);
-                        gridPane.add(buttonRead, 0, 2);
-                        gridPane.add(buttonUpdate, 0, 3);
-                        gridPane.add(buttonCreate, 0, 4);
-                        gridPane.add(buttonDelete, 0, 5);
+                        gridPane.add(buttonReadEleve, 0, 2);
+                        gridPane.add(buttonUpdateEleve, 0, 3);
+                        gridPane.add(buttonCreateEleve, 0, 4);
+                        gridPane.add(buttonDeleteEleve, 0, 5);
 
                         layoutAccueil.getChildren().addAll(gridPane);
 
@@ -225,7 +314,7 @@ public class Main extends Application {
                             }
                         });
 
-                        buttonRead.setOnAction(new EventHandler<ActionEvent>() {
+                        buttonReadEleve.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
                                 Number comparateur = -1;
@@ -276,7 +365,7 @@ public class Main extends Application {
                             }
                         });
 
-                        buttonUpdate.setOnAction(new EventHandler<ActionEvent>() {
+                        buttonUpdateEleve.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
                                 Number comparateur = -1;
@@ -376,7 +465,7 @@ public class Main extends Application {
                             }
                         });
 
-                        buttonCreate.setOnAction(new EventHandler<ActionEvent>() {
+                        buttonCreateEleve.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
                                 Label Label = new Label("Creation d'un nouvel élève");
@@ -457,7 +546,7 @@ public class Main extends Application {
                             }
                         });
 
-                        buttonDelete.setOnAction(new EventHandler<ActionEvent>() {
+                        buttonDeleteEleve.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
                                 Number comparateur = -1;
