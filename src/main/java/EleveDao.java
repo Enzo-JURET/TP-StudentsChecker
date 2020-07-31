@@ -9,12 +9,14 @@ public class EleveDao {
     static Connection con = DataConnection.getConnection();
 
     public int add(Eleve eleve)throws SQLException{
-        String query = "insert into eleve(nomEleve, prenomEleve, dateNaissance, idClasse) VALUES (?, ?, ?, ?)";
+        String query = "insert into eleve(nomEleve, prenomEleve, dateNaissance, idClasse, mail, mdp) VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = con.prepareStatement(query);
         ps.setString(1, eleve.getNomEleve());
         ps.setString(2, eleve.getPrenomEleve());
         ps.setString(3, eleve.getDateNaissance());
         ps.setInt(4, eleve.getIdClasse());
+        ps.setString(5, eleve.getMail());
+        ps.setString(6, eleve.getMail());
         int n = ps.executeUpdate();
         return n;
     }
@@ -66,6 +68,8 @@ public class EleveDao {
             eleve.setPrenomEleve(rs.getString("prenomEleve"));
             eleve.setDateNaissance(rs.getString("dateNaissance"));
             eleve.setIdClasse(rs.getInt("idClasse"));
+            eleve.setMail(rs.getString("mail"));
+            eleve.setMdp(rs.getString("mdp"));
             ls.add(eleve);
         }
         return ls;
@@ -73,13 +77,15 @@ public class EleveDao {
 
     public void update(Eleve eleve) throws SQLException {
 
-        String query = "update eleve set nomEleve=?,  prenomEleve= ?, dateNaissance=?, idClasse=? where idEleve = ?";
+        String query = "update eleve set nomEleve=?,  prenomEleve= ?, dateNaissance=?, idClasse=?, mail=?, mdp=? where idEleve = ?";
         PreparedStatement ps = con.prepareStatement(query);
         ps.setString(1, eleve.getNomEleve());
         ps.setString(2, eleve.getPrenomEleve());
         ps.setString(3, eleve.getDateNaissance());
         ps.setInt(4, eleve.getIdClasse());
-        ps.setInt(5, eleve.getIdEleve());
+        ps.setInt(7, eleve.getIdEleve());
+        ps.setString(5, eleve.getMail());
+        ps.setString(6, eleve.getMdp());
         ps.executeUpdate();
     }
 }

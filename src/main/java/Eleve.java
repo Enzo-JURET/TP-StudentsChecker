@@ -7,21 +7,35 @@ public class Eleve {
     private String prenomEleve;
     private String dateNaissance;
     private int idClasse;
+    private String mail;
+    private String mdp;
 
-    public Eleve(String nomEleve, String prenomEleve, String dateNaissance, int idClasse) {
+    public Eleve(String nomEleve, String prenomEleve, String dateNaissance, int idClasse, String mail, String mdp) {
         this.nomEleve = nomEleve;
         this.prenomEleve = prenomEleve;
         this.dateNaissance = dateNaissance;
         this.idClasse = idClasse;
-    }
-
-    public Eleve(String nomEleve, String prenomEleve, String dateNaissance) {
-        this.nomEleve = nomEleve;
-        this.prenomEleve = prenomEleve;
-        this.dateNaissance = dateNaissance;
+        this.mail = mail;
+        this.mdp = mdp;
     }
 
     public Eleve() {
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public String getMdp() {
+        return mdp;
+    }
+
+    public void setMdp(String mdp) {
+        this.mdp = mdp;
     }
 
     @Override
