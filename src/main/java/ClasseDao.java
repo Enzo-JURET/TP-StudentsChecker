@@ -48,7 +48,7 @@ public class ClasseDao {
             return null;
     }
 
-    public List<Classe> getClasse()
+    public List<Classe> getClasses()
             throws SQLException
     {
         String query = "select * from classe";
@@ -66,7 +66,7 @@ public class ClasseDao {
         return ls;
     }
 
-    public void update(Classe classe) throws SQLException {
+    public void updateClasse(Classe classe) throws SQLException {
 
         String query = "update classe set libelleClasse=?,  periodeClasse= ? where idClasse = ?";
         PreparedStatement ps = con.prepareStatement(query);

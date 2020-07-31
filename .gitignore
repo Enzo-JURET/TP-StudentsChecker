@@ -1,4 +1,4 @@
 pom.xml
 config.properties
 .DS_Store
-src/main/java/DataConnection.java
+DataConnection
