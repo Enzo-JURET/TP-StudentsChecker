@@ -18,7 +18,7 @@ public class ClasseDao {
     }
 
     public void deleteClasse(int id) throws SQLException {
-        String query = "delete classe where idClasse =?";
+        String query = "delete from classe where idClasse =?";
         PreparedStatement ps = con.prepareStatement(query);
         ps.setInt(1, id);
         ps.executeUpdate();
