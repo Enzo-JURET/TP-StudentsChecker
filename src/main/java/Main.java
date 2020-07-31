@@ -28,6 +28,7 @@ public class Main extends Application {
     BorderPane layout;
     Group root = new Group();
     Number idEleve = -1;
+    Number idClasse = -1;
 
     public static void main(String[] args) {
         launch(args);
@@ -112,8 +113,7 @@ public class Main extends Application {
                 listViewClasse.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
                     @Override
                     public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                        idEleve = listViewClasse.getSelectionModel().getSelectedItem().getIdClasse();
-                        System.out.println(idEleve);
+                        idClasse = listViewClasse.getSelectionModel().getSelectedItem().getIdClasse();
                     }
                 });
 
@@ -130,7 +130,7 @@ public class Main extends Application {
 
                 layoutClasses.getChildren().addAll(gridPane);
 
-                Scene scene = new Scene(layoutClasses, 540, 500);
+                Scene scene = new Scene(layoutClasses, 270, 550);
                 windowClasses.setScene(scene);
                 windowClasses.show();
                 windowConnexion.close();
@@ -156,7 +156,7 @@ public class Main extends Application {
                         EleveDao elevesDao = new EleveDao();
                         List<Eleve> ls = null;
                         try {
-                            ls = elevesDao.getEleves();
+                            ls = elevesDao.getElevesByClasse((Integer) idClasse);
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();
                         }

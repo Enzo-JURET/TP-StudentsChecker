@@ -75,6 +75,28 @@ public class EleveDao {
         return ls;
     }
 
+    public List<Eleve> getElevesByClasse(Integer idClase)
+            throws SQLException
+    {
+        String query = "select * from eleve where idClasse='"+idClase+"'";
+        PreparedStatement ps = con.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+        List<Eleve> ls = new ArrayList();
+
+        while (rs.next()) {
+            Eleve eleve = new Eleve();
+            eleve.setIdEleve(rs.getInt("idEleve"));
+            eleve.setNomEleve(rs.getString("nomEleve"));
+            eleve.setPrenomEleve(rs.getString("prenomEleve"));
+            eleve.setDateNaissance(rs.getString("dateNaissance"));
+            eleve.setIdClasse(rs.getInt("idClasse"));
+            eleve.setMail(rs.getString("mail"));
+            eleve.setMdp(rs.getString("mdp"));
+            ls.add(eleve);
+        }
+        return ls;
+    }
+
     public void updateEleve(Eleve eleve) throws SQLException {
 
         String query = "update eleve set nomEleve=?,  prenomEleve= ?, dateNaissance=?, idClasse=?, mail=?, mdp=? where idEleve = ?";
