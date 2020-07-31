@@ -10,7 +10,9 @@ public class Maintest {
         log.setMdp("mdpbidon");
         log.seConnecter();
 
+        System.out.println(log.getId()+" "+log.getMdp());
         System.out.println(log.isConnecte());
+        System.out.println(log.isAdmin());
 
         Eleve eleve = new Eleve();
         eleve.setPrenomEleve("ayman");
@@ -22,10 +24,10 @@ public class Maintest {
         EleveDao alevesDao = new EleveDao();
 
         // add
-        alevesDao.addEleve(eleve);
+        //alevesDao.addEleve(eleve);
 
         // read
-        Eleve ele = alevesDao.getEleve(5);
+        Eleve ele = alevesDao.getEleve(9);
         System.out.println(ele.toString());
 
         // read All
@@ -35,11 +37,11 @@ public class Maintest {
         }
 
         // update
-        Eleve tempEleve = alevesDao.getEleve(4);
+        Eleve tempEleve = alevesDao.getEleve(9);
         tempEleve.setNomEleve("Asgard");
         alevesDao.updateEleve(tempEleve);
 
         // delete
-        alevesDao.deleteEleve(5);
+       //alevesDao.deleteEleve(5);
     }
 }
