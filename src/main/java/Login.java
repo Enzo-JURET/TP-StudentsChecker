@@ -20,14 +20,6 @@ public class Login {
     public Login() {
     }
 
-    public static Connection getCon() {
-        return con;
-    }
-
-    public static void setCon(Connection con) {
-        Login.con = con;
-    }
-
     public boolean isConnecte() {
         return connecte;
     }
@@ -79,27 +71,27 @@ public class Login {
         }
 
         ResultSet rs2 = null;
-        if(!check){
+        if(check==false){
             String query2 = "select * from eleve where mail= ? and mdp=?";
-            PreparedStatement ps2 = con.prepareStatement(query);
+            PreparedStatement ps2 = con.prepareStatement(query2);
             ps2.setString(1, id);
             ps2.setString(2, mdp);
-            rs2 = ps.executeQuery();
+            rs2 = ps2.executeQuery();
+            while (rs2.next()) {
+                check = true;
+                Eleve e = new Eleve();
+                e.setIdEleve(rs2.getInt("idEleve"));
+                e.setNomEleve(rs2.getString("nomEleve"));
+                e.setPrenomEleve(rs2.getString("prenomEleve"));
+                e.setDateNaissance(rs2.getString("dateNaissance"));
+                e.setIdClasse(rs2.getInt("idClasse"));
+                e.setMail(rs2.getString("mail"));
+                e.setMdp(rs2.getString("mdp"));
+                this.o = e;
+                this.connecte = true;
+            }
         }
 
-        while (rs2.next()) {
-            check = true;
-            Eleve e = new Eleve();
-            e.setIdEleve(rs2.getInt("idEleve"));
-            e.setNomEleve(rs2.getString("nomEleve"));
-            e.setPrenomEleve(rs2.getString("prenomEleve"));
-            e.setDateNaissance(rs2.getString("dateNaissance"));
-            e.setIdClasse(rs2.getInt("idClasse"));
-            e.setMail(rs2.getString("mail"));
-            e.setMdp(rs2.getString("mdp"));
-            this.o = e;
-            this.connecte = true;
-        }
     }
 
     public boolean isAdmin(){
