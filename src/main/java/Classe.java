@@ -15,11 +15,7 @@ public class Classe {
 
     @Override
     public String toString() {
-        return "Classe{" +
-                "idClasse=" + idClasse +
-                ", libelleClasse='" + libelleClasse + '\'' +
-                ", periodeClasse='" + periodeClasse + '\'' +
-                '}';
+        return libelleClasse;
     }
 
     public Integer getIdClasse() {
