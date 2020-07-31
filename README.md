@@ -1,5 +1,10 @@
 # TP-StudentsChecker
 
+## Equipe de développement
+- Enzo JURET
+- Ayman
+- Marvyn ROCHER
+
 Documentation TP-StudentChecker
 # Principe de l'application
 
