@@ -196,32 +196,205 @@ public class Main extends Application {
                 buttonUpdateClasse.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                        windowClasses.close();
-                        windowConnexion.show();
+                            Number comparateur = -1;
+                            if (idClasse != comparateur) {
+                                Label label = new Label("Modification de la classe : " + listViewClasse.getSelectionModel().getSelectedItem().getLibelleClasse());
+
+                                Button buttonAnnulerModificationClasse = new Button();
+                                buttonAnnulerModificationClasse.setText("Annuler");
+
+                                Label labelLibelle = new Label("Libelle de la classe : ");
+                                Label labelPeriode = new Label("Période de la classe : ");
+
+                                TextArea libelleTextArea = new TextArea();
+                                TextArea periodeTextArea = new TextArea();
+
+                                libelleTextArea.setText(listViewClasse.getSelectionModel().getSelectedItem().getLibelleClasse());
+                                periodeTextArea.setText(listViewClasse.getSelectionModel().getSelectedItem().getPeriodeClasse());
+
+                                Button buttonModifier = new Button();
+                                buttonModifier.setText("Modifier");
+
+                                GridPane gridPane = new GridPane();
+                                gridPane.setPadding(new Insets(10, 10, 10, 10));
+                                gridPane.setVgap(8);
+                                gridPane.setHgap(10);
+                                gridPane.add(label, 0, 0);
+                                gridPane.add(labelLibelle, 0, 1);
+                                gridPane.add(libelleTextArea, 1, 1);
+                                gridPane.add(labelPeriode, 0, 2);
+                                gridPane.add(periodeTextArea, 1, 2);
+                                gridPane.add(buttonModifier, 0, 6);
+                                gridPane.add(buttonAnnulerModificationClasse, 1, 6);
+
+                                StackPane secondaryLayout = new StackPane();
+                                secondaryLayout.getChildren().add(gridPane);
+
+
+                                Scene secondScene = new Scene(secondaryLayout, 700, 290);
+
+                                // New window (Stage)
+                                Stage newWindow = new Stage();
+                                newWindow.setTitle("Modification de la classe : " + listViewClasse.getSelectionModel().getSelectedItem().getLibelleClasse());
+                                newWindow.setScene(secondScene);
+
+                                // Set position of second window, related to primary window.
+                                newWindow.setX(stage.getX() + 200);
+                                newWindow.setY(stage.getY() + 100);
+
+                                windowClasses.close();
+                                newWindow.show();
+
+                                buttonModifier.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override
+                                    public void handle(ActionEvent event) {
+                                        listViewClasse.getSelectionModel().getSelectedItem().setLibelleClasse(libelleTextArea.getText());
+                                        listViewClasse.getSelectionModel().getSelectedItem().setPeriodeClasse(periodeTextArea.getText());
+
+                                        try {
+                                            classeDao.updateClasse(listViewClasse.getSelectionModel().getSelectedItem());
+                                        } catch (SQLException throwables) {
+                                            throwables.printStackTrace();
+                                        }
+
+                                        listViewClasse.refresh();
+                                        newWindow.close();
+                                        windowClasses.show();
+                                    }
+                                });
+
+                                buttonAnnulerModificationClasse.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override
+                                    public void handle(ActionEvent event) {
+                                        listViewClasse.refresh();
+                                        newWindow.close();
+                                        windowClasses.show();
+                                    }
+                                });
+                            }
                     }
                 });
 
                 buttonCreateClasse.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
+                        Label Label = new Label("Creation d'une nouvelle classe : ");
+
+                        Button buttonAnnulerCreationClasse = new Button();
+                        buttonAnnulerCreationClasse.setText("Annuler");
+
+                        Button buttonCreerClasse = new Button();
+                        buttonCreerClasse.setText("Créer");
+
+                        Label labelLibelle = new Label("Libelle de la classe : ");
+                        Label labelPeriode = new Label("Période de la classe : ");
+
+                        TextArea libelleTextArea = new TextArea();
+                        TextArea periodeTextArea = new TextArea();
+
+                        GridPane gridPane = new GridPane();
+                        gridPane.setPadding(new Insets(10, 10, 10, 10));
+                        gridPane.setVgap(8);
+                        gridPane.setHgap(10);
+                        gridPane.add(Label, 0, 0);
+                        gridPane.add(labelLibelle, 0, 1);
+                        gridPane.add(libelleTextArea, 1, 1);
+                        gridPane.add(labelPeriode, 0, 2);
+                        gridPane.add(periodeTextArea, 1, 2);
+                        gridPane.add(buttonCreerClasse, 0, 3);
+                        gridPane.add(buttonAnnulerCreationClasse, 1, 3);
+
+                        StackPane secondaryLayout = new StackPane();
+                        secondaryLayout.getChildren().add(gridPane);
+                        Scene secondScene = new Scene(secondaryLayout, 700, 350);
+
+                        // New window (Stage)
+                        Stage newWindow = new Stage();
+                        newWindow.setTitle("Création d'une classe");
+                        newWindow.setScene(secondScene);
+
+                        // Set position of second window, related to primary window.
+                        newWindow.setX(stage.getX() + 200);
+                        newWindow.setY(stage.getY() + 100);
+
                         windowClasses.close();
-                        windowConnexion.show();
+                        newWindow.show();
+
+                        buttonCreerClasse.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                listViewClasse.refresh();
+                                newWindow.close();
+                                windowClasses.show();
+                            }
+                        });
+
+                        buttonAnnulerCreationClasse.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                listViewClasse.refresh();
+                                newWindow.close();
+                                windowClasses.show();
+                            }
+                        });
                     }
                 });
 
                 buttonDeleteClasse.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        windowClasses.close();
-                        windowConnexion.show();
-                    }
-                });
+                        Number comparateur = -1;
+                        if (idClasse != comparateur) {
+                            Label Label = new Label("Confirmer la suppression de la classe " + listViewClasse.getSelectionModel().getSelectedItem().getLibelleClasse());
 
-                buttonDeconnexion.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        windowClasses.close();
-                        windowConnexion.show();
+                            Button buttonValiderClasse = new Button();
+                            buttonValiderClasse.setText("Supprimer");
+
+                            Button buttonAnnulerClasse = new Button();
+                            buttonAnnulerClasse.setText("Annuler");
+
+                            GridPane gridPaneSupprimer = new GridPane();
+                            gridPaneSupprimer.setPadding(new Insets(10, 10, 10, 10));
+                            gridPaneSupprimer.setVgap(8);
+                            gridPaneSupprimer.setHgap(10);
+                            gridPaneSupprimer.add(Label, 0, 0);
+                            gridPaneSupprimer.add(buttonValiderClasse, 0, 1);
+                            gridPaneSupprimer.add(buttonAnnulerClasse, 1, 1);
+
+                            StackPane secondaryLayout = new StackPane();
+                            secondaryLayout.getChildren().add(gridPaneSupprimer);
+                            Scene secondScene = new Scene(secondaryLayout, 410, 100);
+
+                            // New window (Stage)
+                            Stage newWindow = new Stage();
+                            newWindow.setTitle("Suppression du compte de l'élève " + listViewClasse.getSelectionModel().getSelectedItem().getLibelleClasse());
+                            newWindow.setScene(secondScene);
+
+                            // Set position of second window, related to primary window.
+                            newWindow.setX(stage.getX() + 200);
+                            newWindow.setY(stage.getY() + 100);
+
+                            windowClasses.close();
+                            newWindow.show();
+
+                            buttonValiderClasse.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent event) {
+                                    listViewClasse.refresh();
+                                    newWindow.close();
+                                    windowClasses.show();
+                                }
+                            });
+
+                            buttonAnnulerClasse.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent event) {
+                                    listViewClasse.refresh();
+                                    newWindow.close();
+                                    windowClasses.show();
+                                }
+                            });
+                        }
                     }
                 });
 
@@ -569,7 +742,7 @@ public class Main extends Application {
 
                                     StackPane secondaryLayout = new StackPane();
                                     secondaryLayout.getChildren().add(gridPaneSupprimer);
-                                    Scene secondScene = new Scene(secondaryLayout, 410, 100);
+                                    Scene secondScene = new Scene(secondaryLayout, 450, 100);
 
                                     // New window (Stage)
                                     Stage newWindow = new Stage();
