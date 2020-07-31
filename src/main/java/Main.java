@@ -591,20 +591,17 @@ public class Main extends Application {
                                         Label labelNom = new Label("Nom de l'élève : ");
                                         Label labelPrenom = new Label("Prénom de l'élève : ");
                                         Label labelDateNaissance = new Label("Date de naissance de l'élève : ");
-                                        Label labelMail = new Label("E-mail de l'élève : ");
-                                        Label labelMdp = new Label("Mot de passe de l'élève : ");
+                                        Label labelClasse = new Label("L'ID de la classe de l'élève : ");
 
                                         TextArea nomTextArea = new TextArea();
                                         TextArea prenomTextArea = new TextArea();
                                         TextArea dateNaissanceTextArea = new TextArea();
-                                        TextArea mailTextArea = new TextArea();
-                                        TextArea mdpTextArea = new TextArea();
+                                        TextArea classeTextArea = new TextArea();
 
                                         nomTextArea.setText(listViewEleve.getSelectionModel().getSelectedItem().getNomEleve());
                                         prenomTextArea.setText(listViewEleve.getSelectionModel().getSelectedItem().getPrenomEleve());
                                         dateNaissanceTextArea.setText(listViewEleve.getSelectionModel().getSelectedItem().getDateNaissance());
-                                        mailTextArea.setText(listViewEleve.getSelectionModel().getSelectedItem().getMail());
-                                        mdpTextArea.setText(listViewEleve.getSelectionModel().getSelectedItem().getMdp());
+                                        classeTextArea.setText(String.valueOf(listViewEleve.getSelectionModel().getSelectedItem().getIdClasse()));
 
                                         Button buttonModifier = new Button();
                                         buttonModifier.setText("Modifier");
@@ -620,12 +617,10 @@ public class Main extends Application {
                                         gridPane.add(prenomTextArea, 1, 2);
                                         gridPane.add(labelDateNaissance, 0, 3);
                                         gridPane.add(dateNaissanceTextArea, 1, 3);
-                                        gridPane.add(labelMail, 0, 4);
-                                        gridPane.add(mailTextArea, 1, 4);
-                                        gridPane.add(labelMdp, 0, 5);
-                                        gridPane.add(mdpTextArea, 1, 5);
-                                        gridPane.add(buttonModifier, 0, 6);
-                                        gridPane.add(buttonAnnuler, 1, 6);
+                                        gridPane.add(labelClasse, 0,4);
+                                        gridPane.add(classeTextArea, 1,4);
+                                        gridPane.add(buttonModifier, 0, 5);
+                                        gridPane.add(buttonAnnuler, 1, 5);
 
                                         StackPane secondaryLayout = new StackPane();
                                         secondaryLayout.getChildren().add(gridPane);
@@ -651,8 +646,7 @@ public class Main extends Application {
                                                 listViewEleve.getSelectionModel().getSelectedItem().setNomEleve(nomTextArea.getText());
                                                 listViewEleve.getSelectionModel().getSelectedItem().setPrenomEleve(prenomTextArea.getText());
                                                 listViewEleve.getSelectionModel().getSelectedItem().setDateNaissance(dateNaissanceTextArea.getText());
-                                                listViewEleve.getSelectionModel().getSelectedItem().setMail(mailTextArea.getText());
-                                                listViewEleve.getSelectionModel().getSelectedItem().setMdp(mdpTextArea.getText());
+                                                listViewEleve.getSelectionModel().getSelectedItem().setIdClasse(Integer.valueOf(classeTextArea.getText()));
 
                                                 try {
                                                     elevesDao.updateEleve(listViewEleve.getSelectionModel().getSelectedItem());
