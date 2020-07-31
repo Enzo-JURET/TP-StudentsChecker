@@ -5,15 +5,24 @@ public class Maintest {
 
     public static void main(String[] args)throws SQLException{
 
+        Login log = new Login();
+        log.setId("ayman072@hotmail.fr");
+        log.setMdp("mdpbidon");
+        log.seConnecter();
+
+        System.out.println(log.isConnecte());
+
         Eleve eleve = new Eleve();
         eleve.setPrenomEleve("ayman");
         eleve.setNomEleve("agharbi");
         eleve.setDateNaissance("1998-05-14");
         eleve.setIdClasse(1);
+        eleve.setMail("ayman072@hotmail.fr");
+        eleve.setMdp("mdpbidon");
         EleveDao alevesDao = new EleveDao();
 
         // add
-        alevesDao.add(eleve);
+        alevesDao.addEleve(eleve);
 
         // read
         Eleve ele = alevesDao.getEleve(5);
@@ -28,9 +37,9 @@ public class Maintest {
         // update
         Eleve tempEleve = alevesDao.getEleve(4);
         tempEleve.setNomEleve("Asgard");
-        alevesDao.update(tempEleve);
+        alevesDao.updateEleve(tempEleve);
 
         // delete
-        alevesDao.delete(5);
+        alevesDao.deleteEleve(5);
     }
 }
