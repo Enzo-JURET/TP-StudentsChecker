@@ -14,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -69,6 +70,9 @@ public class Main extends Application {
         hbBtn.getChildren().add(buttonLogin);
         gridPane.add(hbBtn, 1, 4);
 
+        Label labelmsg = new Label("");
+        gridPane.add(labelmsg, 1, 5);
+
         root.getChildren().addAll(gridPane);
 
         Scene sceneConnexion = new Scene(root, 280, 230);
@@ -79,6 +83,38 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 // Condition qui  est connecté ?
+                Login log = new Login();
+
+                log.setId(userTextField.getText());
+                log.setMdp(pwBox.getText());
+                try {
+                    log.seConnecter();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+
+                System.out.println(log.getId()+" "+log.getMdp());
+                System.out.println(log.isConnecte());
+                System.out.println(log.isAdmin());
+
+                if(log.isConnecte() && log.isAdmin()){
+
+                }else if(log.isConnecte()){
+                    EleveDao eleveDao = new EleveDao();
+                    Eleve e;
+                    try {
+                        e = eleveDao.getEleve(userTextField.getText());
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+
+
+
+                }else{
+                    labelmsg.setTextFill(Color.FIREBRICK);
+                    labelmsg.setText("mail ou mot de passe incorrect");
+                }
+
                 Stage windowClasses = new Stage();
                 windowClasses.setTitle("Liste des classes");
 
@@ -403,6 +439,8 @@ public class Main extends Application {
                     public void handle(ActionEvent event) {
                         windowClasses.close();
                         windowConnexion.show();
+                        log.deconnection();
+                        labelmsg.setText("Vous avez été deconnecté !");
                     }
                 });
 
