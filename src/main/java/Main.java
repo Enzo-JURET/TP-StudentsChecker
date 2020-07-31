@@ -17,6 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class Main extends Application {
@@ -24,7 +25,7 @@ public class Main extends Application {
     Stage window;
     BorderPane layout;
     Group root = new Group();
-    String result = "rien..";
+    Number idClasse = -1;
 
     public static void main(String[] args) {
         launch(args);
@@ -60,37 +61,55 @@ public class Main extends Application {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 //label.setText("OLD Index: " + oldValue + ",  NEW Index: " + newValue);
                 label.setText("Index: " + newValue);
-                Number coucou = newValue;
-                System.out.println(coucou);
+                idClasse = listView.getSelectionModel().getSelectedItem().getIdEleve();
             }
         });
 
         Button button = new Button();
-        button.setText("Regarder la classe");
+        button.setText("Voir la page de l'élève");
 
 
         button.setOnAction(new EventHandler<ActionEvent>() {
-
             @Override
             public void handle(ActionEvent event) {
+                Number comparateur = -1;
 
-                Label secondLabel = new Label("I'm a Label on new Window");
+                if(idClasse != comparateur) {
+                    Eleve ele = null;
+                    try {
+                        ele = elevesDao.getEleve((Integer) idClasse);
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                    Label idLabel = new Label("ID : "+ele.getIdEleve());
+                    Label prenomLabel = new Label("Prénom : "+ele.getPrenomEleve());
+                    Label nomLabel = new Label("Nom : "+ele.getNomEleve());
+                    Label dateNaissanceLabel = new Label("Date de naissance : "+ele.getDateNaissance());
+                    Label idClasseLabel = new Label("ID Classe : "+ele.getIdClasse());
+                    StackPane secondaryLayout = new StackPane();
 
-                StackPane secondaryLayout = new StackPane();
-                secondaryLayout.getChildren().add(secondLabel);
+                    GridPane gridPane = new GridPane();
+                    gridPane.setPadding(new Insets(10,10,10,10));
+                    gridPane.setVgap(8);
+                    gridPane.setHgap(10);
+                    gridPane.add(idLabel, 0,0);
+                    gridPane.add(prenomLabel, 0,1);
+                    gridPane.add(nomLabel, 0,2);
+                    gridPane.add(dateNaissanceLabel, 0,3);
+                    gridPane.add(idClasseLabel, 0,4);
 
-                Scene secondScene = new Scene(secondaryLayout, 230, 100);
+                    secondaryLayout.getChildren().add(gridPane);
 
-                // New window (Stage)
-                Stage newWindow = new Stage();
-                newWindow.setTitle("Second Stage");
-                newWindow.setScene(secondScene);
-
-                // Set position of second window, related to primary window.
-                newWindow.setX(stage.getX() + 200);
-                newWindow.setY(stage.getY() + 100);
-
-                newWindow.show();
+                    Scene secondScene = new Scene(secondaryLayout, 540, 500);
+                    // New window (Stage)
+                    Stage newWindow = new Stage();
+                    newWindow.setTitle("Second Stage");
+                    newWindow.setScene(secondScene);
+                    // Set position of second window, related to primary window.
+                    newWindow.setX(stage.getX() + 200);
+                    newWindow.setY(stage.getY() + 100);
+                    newWindow.show();
+                }
             }
         });
 
@@ -103,11 +122,11 @@ public class Main extends Application {
         gridPane.setHgap(10);
         gridPane.add(listView, 0,0);
         gridPane.add(label, 0,1);
-        gridPane.add(button, 1,0);
+        gridPane.add(button, 0,2);
 
         root.getChildren().addAll(gridPane);
 
-        Scene scene = new Scene(root, 470, 780);
+        Scene scene = new Scene(root, 270, 500);
         window.setScene(scene);
         window.show();
     }
