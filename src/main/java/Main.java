@@ -416,9 +416,14 @@ public class Main extends Application {
                             buttonValiderClasse.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override
                                 public void handle(ActionEvent event) {
+                                    try {
+                                        classeDao.deleteClasse(listViewClasse.getSelectionModel().getSelectedItem().getIdClasse());
+                                    } catch (SQLException throwables) {
+                                        throwables.printStackTrace();
+                                    }
                                     listViewClasse.refresh();
                                     newWindow.close();
-                                    windowClasses.show();
+                                    windowConnexion.show();
                                 }
                             });
 
@@ -761,30 +766,30 @@ public class Main extends Application {
                             @Override
                             public void handle(ActionEvent event) {
                                 Number comparateur = -1;
-                                if (idEleve != comparateur) {
-                                    Label Label = new Label("Confirmer la suppression du compte de l'élève " + listViewEleve.getSelectionModel().getSelectedItem().getPrenomEleve() + " " + listViewEleve.getSelectionModel().getSelectedItem().getNomEleve() + "...");
+                                if (idClasse != comparateur) {
+                                    Label Label = new Label("Confirmer la suppression de l'élève " + listViewEleve.getSelectionModel().getSelectedItem().getPrenomEleve()+" "+listViewEleve.getSelectionModel().getSelectedItem().getNomEleve());
 
-                                    Button buttonValider = new Button();
-                                    buttonValider.setText("Supprimer");
+                                    Button buttonValiderClasse = new Button();
+                                    buttonValiderClasse.setText("Supprimer");
 
-                                    Button buttonAnnuler = new Button();
-                                    buttonAnnuler.setText("Annuler");
+                                    Button buttonAnnulerClasse = new Button();
+                                    buttonAnnulerClasse.setText("Annuler");
 
                                     GridPane gridPaneSupprimer = new GridPane();
                                     gridPaneSupprimer.setPadding(new Insets(10, 10, 10, 10));
                                     gridPaneSupprimer.setVgap(8);
                                     gridPaneSupprimer.setHgap(10);
                                     gridPaneSupprimer.add(Label, 0, 0);
-                                    gridPaneSupprimer.add(buttonValider, 0, 1);
-                                    gridPaneSupprimer.add(buttonAnnuler, 1, 1);
+                                    gridPaneSupprimer.add(buttonValiderClasse, 0, 1);
+                                    gridPaneSupprimer.add(buttonAnnulerClasse, 1, 1);
 
                                     StackPane secondaryLayout = new StackPane();
                                     secondaryLayout.getChildren().add(gridPaneSupprimer);
-                                    Scene secondScene = new Scene(secondaryLayout, 450, 100);
+                                    Scene secondScene = new Scene(secondaryLayout, 410, 100);
 
                                     // New window (Stage)
                                     Stage newWindow = new Stage();
-                                    newWindow.setTitle("Suppression du compte de l'élève " + listViewEleve.getSelectionModel().getSelectedItem().getPrenomEleve() + " " + listViewEleve.getSelectionModel().getSelectedItem().getNomEleve());
+                                    newWindow.setTitle("Suppression du compte de l'élève " + listViewEleve.getSelectionModel().getSelectedItem().getPrenomEleve()+" "+listViewEleve.getSelectionModel().getSelectedItem().getNomEleve());
                                     newWindow.setScene(secondScene);
 
                                     // Set position of second window, related to primary window.
@@ -794,16 +799,21 @@ public class Main extends Application {
                                     windowEleves.close();
                                     newWindow.show();
 
-                                    buttonValider.setOnAction(new EventHandler<ActionEvent>() {
+                                    buttonValiderClasse.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override
                                         public void handle(ActionEvent event) {
+                                            try {
+                                                elevesDao.deleteEleve(listViewEleve.getSelectionModel().getSelectedItem().getIdEleve());
+                                            } catch (SQLException throwables) {
+                                                throwables.printStackTrace();
+                                            }
                                             listViewEleve.refresh();
                                             newWindow.close();
-                                            windowEleves.show();
+                                            windowClasses.show();
                                         }
                                     });
 
-                                    buttonAnnuler.setOnAction(new EventHandler<ActionEvent>() {
+                                    buttonAnnulerClasse.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override
                                         public void handle(ActionEvent event) {
                                             listViewEleve.refresh();
