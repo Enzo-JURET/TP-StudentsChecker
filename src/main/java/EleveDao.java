@@ -16,7 +16,7 @@ public class EleveDao {
         ps.setString(3, eleve.getDateNaissance());
         ps.setInt(4, eleve.getIdClasse());
         ps.setString(5, eleve.getMail());
-        ps.setString(6, eleve.getMail());
+        ps.setString(6, eleve.getMdp());
         int n = ps.executeUpdate();
         return n;
     }

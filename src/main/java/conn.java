@@ -761,7 +761,8 @@ public class conn extends Application {
                                             }
                                         }else{
                                             labelInfo.setTextFill(Color.FIREBRICK);
-                                            labelInfo.setText("Mot de passe non identique");                                        }
+                                            labelInfo.setText("Mot de passe non identique");
+                                        }
                                     }
                                 });
 

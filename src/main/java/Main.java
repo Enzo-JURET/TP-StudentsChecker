@@ -108,8 +108,6 @@ public class Main extends Application {
                         throwables.printStackTrace();
                     }
 
-
-
                 }else{
                     labelmsg.setTextFill(Color.FIREBRICK);
                     labelmsg.setText("mail ou mot de passe incorrect");
@@ -692,6 +690,7 @@ public class Main extends Application {
                                 Button buttonCreerEleve = new Button();
                                 buttonCreerEleve.setText("Créer");
 
+                                Label labelInfo = new Label("");
                                 Label labelNom = new Label("Nom de l'élève : ");
                                 Label labelPrenom = new Label("Prénom de l'élève : ");
                                 Label labelDateNaissance = new Label("Date de naissance de l'élève : ");
@@ -725,6 +724,7 @@ public class Main extends Application {
                                 gridPane.add(confirmerMdpTextArea, 1, 6);
                                 gridPane.add(buttonCreerEleve, 0, 7);
                                 gridPane.add(buttonAnnulerCreation, 1, 7);
+                                gridPane.add(labelInfo, 0, 8);
 
                                 StackPane secondaryLayout = new StackPane();
                                 secondaryLayout.getChildren().add(gridPane);
@@ -745,9 +745,27 @@ public class Main extends Application {
                                 buttonCreerEleve.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override
                                     public void handle(ActionEvent event) {
-                                        listViewEleve.refresh();
-                                        newWindow.close();
-                                        windowEleves.show();
+                                        System.out.println(mdpTextArea.getText()+" "+confirmerMdpTextArea.getText());
+                                        if(mdpTextArea.getText().equals(confirmerMdpTextArea.getText())){
+                                            Eleve e = new Eleve();
+                                            e.setNomEleve(nomTextArea.getText());
+                                            e.setPrenomEleve(prenomTextArea.getText());
+                                            e.setDateNaissance(dateNaissanceTextArea.getText());
+                                            e.setMail(mailTextArea.getText());
+                                            e.setMdp(mdpTextArea.getText());
+                                            e.setIdClasse((int) idClasse);
+                                            try {
+                                                elevesDao.addEleve(e);
+                                            } catch (SQLException throwables) {
+                                                throwables.printStackTrace();
+                                            }
+                                            listViewEleve.refresh();
+                                            newWindow.close();
+                                            windowEleves.show();
+                                        }else{
+                                            labelInfo.setTextFill(Color.FIREBRICK);
+                                            labelInfo.setText("Mot de passe non identique");
+                                        }
                                     }
                                 });
 
