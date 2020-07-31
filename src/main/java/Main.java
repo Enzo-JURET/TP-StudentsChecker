@@ -935,6 +935,9 @@ public class Main extends Application {
                             Label labelMail = new Label("E-mail de l'élève : ");
                             Label labelMdp = new Label("Mot de passe de l'élève : ");
 
+                            Label labelmsg = new Label("");
+                            labelmsg.setStyle("-fx-font-color: red;");
+
                             TextArea mailTextArea = new TextArea();
                             TextArea mdpTextArea = new TextArea();
 
@@ -955,6 +958,7 @@ public class Main extends Application {
                             gridPane.add(mdpTextArea, 1, 2);
                             gridPane.add(buttonModifier, 0, 3);
                             gridPane.add(buttonAnnuler, 1, 3);
+                            gridPane.add(labelmsg, 0, 4);
 
                             StackPane secondaryLayout = new StackPane();
                             secondaryLayout.getChildren().add(gridPane);
@@ -985,6 +989,7 @@ public class Main extends Application {
                                     } catch (SQLException throwables) {
                                         throwables.printStackTrace();
                                     }
+                                    labelmsg.setText("Votre profil a été modifié !");
                                     newWindow.close();
                                     windowCompteEleve.show();
                                 }
@@ -993,6 +998,7 @@ public class Main extends Application {
                             buttonAnnuler.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override
                                 public void handle(ActionEvent event) {
+                                    labelmsg.setText("Votre profil n'à pas été modifié !");
                                     newWindow.close();
                                     windowCompteEleve.show();
                                 }
