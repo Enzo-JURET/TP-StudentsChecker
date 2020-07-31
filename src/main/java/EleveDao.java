@@ -110,4 +110,31 @@ public class EleveDao {
         ps.setString(6, eleve.getMdp());
         ps.executeUpdate();
     }
+
+    public Eleve getEleve(String mail) throws SQLException {
+
+        String query = "select * from eleve where mail= ?";
+        PreparedStatement ps = con.prepareStatement(query);
+        ps.setString(1, mail);
+        Eleve eleve = new Eleve();
+        ResultSet rs = ps.executeQuery();
+        boolean check = false;
+
+        while (rs.next()) {
+            check = true;
+            eleve.setIdEleve(rs.getInt("idEleve"));
+            eleve.setNomEleve(rs.getString("nomEleve"));
+            eleve.setPrenomEleve(rs.getString("prenomEleve"));
+            eleve.setDateNaissance(rs.getString("dateNaissance"));
+            eleve.setMail(rs.getString("mail"));
+            eleve.setMdp(rs.getString("mail"));
+            eleve.setIdClasse(rs.getInt("idClasse"));
+        }
+
+        if (check == true) {
+            return eleve;
+        }
+        else
+            return null;
+    }
 }
