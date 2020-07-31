@@ -29,6 +29,7 @@ public class conn extends Application {
     BorderPane layout;
     Group root = new Group();
     Number idEleve = -1;
+    Number idClasse = -1;
 
     public static void main(String[] args) {
         launch(args);
@@ -63,14 +64,14 @@ public class conn extends Application {
         PasswordField pwBox = new PasswordField();
         gridPane.add(pwBox, 1, 2);
 
-        Label labelmsg = new Label("");
-        gridPane.add(labelmsg, 1, 4);
-
         Button buttonLogin = new Button("Sign in");
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtn.getChildren().add(buttonLogin);
         gridPane.add(hbBtn, 1, 4);
+
+        Label labelmsg = new Label("");
+        gridPane.add(labelmsg, 1, 5);
 
         root.getChildren().addAll(gridPane);
 
@@ -81,7 +82,7 @@ public class conn extends Application {
         buttonLogin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                // Condition qui  est connecté ?
                 Login log = new Login();
 
                 log.setId(userTextField.getText());
@@ -113,7 +114,7 @@ public class conn extends Application {
                     labelmsg.setTextFill(Color.FIREBRICK);
                     labelmsg.setText("mail ou mot de passe incorrect");
                 }
-                // Condition qui  est connecté ?
+
                 Stage windowClasses = new Stage();
                 windowClasses.setTitle("Liste des classes");
 
@@ -121,7 +122,47 @@ public class conn extends Application {
                 buttonDeconnexion.setText("se déconnecter");
 
                 Button buttonEleves = new Button();
-                buttonEleves.setText("Consulter la liste des élèves de la classe");
+                buttonEleves.setText("Consulter les élèves de la classe");
+
+                // To Creating a Observable List
+                ObservableList<Classe> classes = FXCollections.observableArrayList();
+
+                // READ ALL Classes
+                ClasseDao classeDao = new ClasseDao();
+                List<Classe> lc = null;
+                try {
+                    lc = classeDao.getClasses();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                for (Classe clc : lc) {
+                    classes.add(clc);
+                }
+
+                ListView<Classe> listViewClasse = new ListView(classes);
+                listViewClasse.setStyle("-fx-font-size: 1.5em ;");
+
+                // Only allowed to select single row in the ListView.
+                listViewClasse.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+                listViewClasse.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                        idClasse = listViewClasse.getSelectionModel().getSelectedItem().getIdClasse();
+                    }
+                });
+
+                Button buttonReadClasse = new Button();
+                buttonReadClasse.setText("Consulter la classe");
+
+                Button buttonUpdateClasse = new Button();
+                buttonUpdateClasse.setText("Modifier la classe");
+
+                Button buttonCreateClasse = new Button();
+                buttonCreateClasse.setText("Ajouter une classe");
+
+                Button buttonDeleteClasse = new Button();
+                buttonDeleteClasse.setText("Supprimer la classe");
 
                 StackPane layoutClasses = new StackPane();
 
@@ -131,14 +172,267 @@ public class conn extends Application {
                 gridPane.setVgap(8);
                 gridPane.setHgap(10);
                 gridPane.add(buttonDeconnexion,0,0);
-                gridPane.add(buttonEleves,0,1);
+                gridPane.add(listViewClasse, 0,1);
+                gridPane.add(buttonEleves,0,2);
+                gridPane.add(buttonReadClasse,0,3);
+                gridPane.add(buttonUpdateClasse,0,4);
+                gridPane.add(buttonCreateClasse,0,5);
+                gridPane.add(buttonDeleteClasse,0,6);
 
                 layoutClasses.getChildren().addAll(gridPane);
 
-                Scene scene = new Scene(layoutClasses, 540, 500);
+                Scene scene = new Scene(layoutClasses, 290, 550);
                 windowClasses.setScene(scene);
                 windowClasses.show();
                 windowConnexion.close();
+
+                buttonReadClasse.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        Number comparateur = -1;
+
+                        if (idClasse != comparateur) {
+                            Classe cla = null;
+                            try {
+                                cla = classeDao.getClasse((Integer) idClasse);
+                            } catch (SQLException throwables) {
+                                throwables.printStackTrace();
+                            }
+                            ClasseDao classeDao = new ClasseDao();
+
+                            Label idLabelClasse = new Label("ID : " + cla.getIdClasse());
+                            Label libelleLabelClasse = new Label("Libelle : " + cla.getLibelleClasse());
+                            Label periodeLabelClasse = new Label("Période : " + cla.getPeriodeClasse());
+
+                            StackPane secondaryLayout = new StackPane();
+
+                            GridPane gridPane = new GridPane();
+                            gridPane.setPadding(new Insets(10, 10, 10, 10));
+                            gridPane.setVgap(8);
+                            gridPane.setHgap(10);
+                            gridPane.add(idLabelClasse, 0, 0);
+                            gridPane.add(libelleLabelClasse, 0, 1);
+                            gridPane.add(periodeLabelClasse, 0, 2);
+
+                            secondaryLayout.getChildren().add(gridPane);
+
+                            Scene secondScene = new Scene(secondaryLayout, 540, 500);
+                            // New window (Stage)
+                            Stage newWindow = new Stage();
+                            newWindow.setTitle("Consultation de la classe " + listViewClasse.getSelectionModel().getSelectedItem().getLibelleClasse());
+                            newWindow.setScene(secondScene);
+                            // Set position of second window, related to primary window.
+                            newWindow.setX(stage.getX() + 200);
+                            newWindow.setY(stage.getY() + 100);
+                            newWindow.show();
+                        }
+                    }
+                });
+
+                buttonUpdateClasse.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        Number comparateur = -1;
+                        if (idClasse != comparateur) {
+                            Label label = new Label("Modification de la classe : " + listViewClasse.getSelectionModel().getSelectedItem().getLibelleClasse());
+
+                            Button buttonAnnulerModificationClasse = new Button();
+                            buttonAnnulerModificationClasse.setText("Annuler");
+
+                            Label labelLibelle = new Label("Libelle de la classe : ");
+                            Label labelPeriode = new Label("Période de la classe : ");
+
+                            TextArea libelleTextArea = new TextArea();
+                            TextArea periodeTextArea = new TextArea();
+
+                            libelleTextArea.setText(listViewClasse.getSelectionModel().getSelectedItem().getLibelleClasse());
+                            periodeTextArea.setText(listViewClasse.getSelectionModel().getSelectedItem().getPeriodeClasse());
+
+                            Button buttonModifier = new Button();
+                            buttonModifier.setText("Modifier");
+
+                            GridPane gridPane = new GridPane();
+                            gridPane.setPadding(new Insets(10, 10, 10, 10));
+                            gridPane.setVgap(8);
+                            gridPane.setHgap(10);
+                            gridPane.add(label, 0, 0);
+                            gridPane.add(labelLibelle, 0, 1);
+                            gridPane.add(libelleTextArea, 1, 1);
+                            gridPane.add(labelPeriode, 0, 2);
+                            gridPane.add(periodeTextArea, 1, 2);
+                            gridPane.add(buttonModifier, 0, 6);
+                            gridPane.add(buttonAnnulerModificationClasse, 1, 6);
+
+                            StackPane secondaryLayout = new StackPane();
+                            secondaryLayout.getChildren().add(gridPane);
+
+
+                            Scene secondScene = new Scene(secondaryLayout, 700, 290);
+
+                            // New window (Stage)
+                            Stage newWindow = new Stage();
+                            newWindow.setTitle("Modification de la classe : " + listViewClasse.getSelectionModel().getSelectedItem().getLibelleClasse());
+                            newWindow.setScene(secondScene);
+
+                            // Set position of second window, related to primary window.
+                            newWindow.setX(stage.getX() + 200);
+                            newWindow.setY(stage.getY() + 100);
+
+                            windowClasses.close();
+                            newWindow.show();
+
+                            buttonModifier.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent event) {
+                                    listViewClasse.getSelectionModel().getSelectedItem().setLibelleClasse(libelleTextArea.getText());
+                                    listViewClasse.getSelectionModel().getSelectedItem().setPeriodeClasse(periodeTextArea.getText());
+
+                                    try {
+                                        classeDao.updateClasse(listViewClasse.getSelectionModel().getSelectedItem());
+                                    } catch (SQLException throwables) {
+                                        throwables.printStackTrace();
+                                    }
+
+                                    listViewClasse.refresh();
+                                    newWindow.close();
+                                    windowClasses.show();
+                                }
+                            });
+
+                            buttonAnnulerModificationClasse.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent event) {
+                                    listViewClasse.refresh();
+                                    newWindow.close();
+                                    windowClasses.show();
+                                }
+                            });
+                        }
+                    }
+                });
+
+                buttonCreateClasse.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        Label Label = new Label("Creation d'une nouvelle classe : ");
+
+                        Button buttonAnnulerCreationClasse = new Button();
+                        buttonAnnulerCreationClasse.setText("Annuler");
+
+                        Button buttonCreerClasse = new Button();
+                        buttonCreerClasse.setText("Créer");
+
+                        Label labelLibelle = new Label("Libelle de la classe : ");
+                        Label labelPeriode = new Label("Période de la classe : ");
+
+                        TextArea libelleTextArea = new TextArea();
+                        TextArea periodeTextArea = new TextArea();
+
+                        GridPane gridPane = new GridPane();
+                        gridPane.setPadding(new Insets(10, 10, 10, 10));
+                        gridPane.setVgap(8);
+                        gridPane.setHgap(10);
+                        gridPane.add(Label, 0, 0);
+                        gridPane.add(labelLibelle, 0, 1);
+                        gridPane.add(libelleTextArea, 1, 1);
+                        gridPane.add(labelPeriode, 0, 2);
+                        gridPane.add(periodeTextArea, 1, 2);
+                        gridPane.add(buttonCreerClasse, 0, 3);
+                        gridPane.add(buttonAnnulerCreationClasse, 1, 3);
+
+                        StackPane secondaryLayout = new StackPane();
+                        secondaryLayout.getChildren().add(gridPane);
+                        Scene secondScene = new Scene(secondaryLayout, 700, 350);
+
+                        // New window (Stage)
+                        Stage newWindow = new Stage();
+                        newWindow.setTitle("Création d'une classe");
+                        newWindow.setScene(secondScene);
+
+                        // Set position of second window, related to primary window.
+                        newWindow.setX(stage.getX() + 200);
+                        newWindow.setY(stage.getY() + 100);
+
+                        windowClasses.close();
+                        newWindow.show();
+
+                        buttonCreerClasse.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                listViewClasse.refresh();
+                                newWindow.close();
+                                windowClasses.show();
+                            }
+                        });
+
+                        buttonAnnulerCreationClasse.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                listViewClasse.refresh();
+                                newWindow.close();
+                                windowClasses.show();
+                            }
+                        });
+                    }
+                });
+
+                buttonDeleteClasse.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        Number comparateur = -1;
+                        if (idClasse != comparateur) {
+                            Label Label = new Label("Confirmer la suppression de la classe " + listViewClasse.getSelectionModel().getSelectedItem().getLibelleClasse());
+
+                            Button buttonValiderClasse = new Button();
+                            buttonValiderClasse.setText("Supprimer");
+
+                            Button buttonAnnulerClasse = new Button();
+                            buttonAnnulerClasse.setText("Annuler");
+
+                            GridPane gridPaneSupprimer = new GridPane();
+                            gridPaneSupprimer.setPadding(new Insets(10, 10, 10, 10));
+                            gridPaneSupprimer.setVgap(8);
+                            gridPaneSupprimer.setHgap(10);
+                            gridPaneSupprimer.add(Label, 0, 0);
+                            gridPaneSupprimer.add(buttonValiderClasse, 0, 1);
+                            gridPaneSupprimer.add(buttonAnnulerClasse, 1, 1);
+
+                            StackPane secondaryLayout = new StackPane();
+                            secondaryLayout.getChildren().add(gridPaneSupprimer);
+                            Scene secondScene = new Scene(secondaryLayout, 410, 100);
+
+                            // New window (Stage)
+                            Stage newWindow = new Stage();
+                            newWindow.setTitle("Suppression du compte de l'élève " + listViewClasse.getSelectionModel().getSelectedItem().getLibelleClasse());
+                            newWindow.setScene(secondScene);
+
+                            // Set position of second window, related to primary window.
+                            newWindow.setX(stage.getX() + 200);
+                            newWindow.setY(stage.getY() + 100);
+
+                            windowClasses.close();
+                            newWindow.show();
+
+                            buttonValiderClasse.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent event) {
+                                    listViewClasse.refresh();
+                                    newWindow.close();
+                                    windowClasses.show();
+                                }
+                            });
+
+                            buttonAnnulerClasse.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent event) {
+                                    listViewClasse.refresh();
+                                    newWindow.close();
+                                    windowClasses.show();
+                                }
+                            });
+                        }
+                    }
+                });
 
                 buttonDeconnexion.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
@@ -146,7 +440,7 @@ public class conn extends Application {
                         windowClasses.close();
                         windowConnexion.show();
                         log.deconnection();
-                        labelmsg.setText("vous avez ete deconnecte");
+                        labelmsg.setText("Vous avez été deconnecté !");
                     }
                 });
 
@@ -163,40 +457,39 @@ public class conn extends Application {
                         EleveDao elevesDao = new EleveDao();
                         List<Eleve> ls = null;
                         try {
-                            ls = elevesDao.getEleves();
+                            ls = elevesDao.getElevesByClasse((Integer) idClasse);
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();
                         }
                         for (Eleve allele : ls) {
-                            System.out.println(allele);
                             eleves.add(allele);
                         }
 
                         // Create a ListView
-                        ListView<Eleve> listView = new ListView<Eleve>(eleves);
-                        listView.setStyle("-fx-font-size: 1.5em ;");
+                        ListView<Eleve> listViewEleve = new ListView<Eleve>(eleves);
+                        listViewEleve.setStyle("-fx-font-size: 1.5em ;");
 
                         // Only allowed to select single row in the ListView.
-                        listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+                        listViewEleve.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-                        listView.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+                        listViewEleve.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
                             @Override
                             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                                idEleve = listView.getSelectionModel().getSelectedItem().getIdEleve();
+                                idEleve = listViewEleve.getSelectionModel().getSelectedItem().getIdEleve();
                             }
                         });
 
-                        Button buttonRead = new Button();
-                        buttonRead.setText("Consulter l'élève");
+                        Button buttonReadEleve = new Button();
+                        buttonReadEleve.setText("Consulter l'élève");
 
-                        Button buttonUpdate = new Button();
-                        buttonUpdate.setText("Modifier l'élève");
+                        Button buttonUpdateEleve = new Button();
+                        buttonUpdateEleve.setText("Modifier l'élève");
 
-                        Button buttonCreate = new Button();
-                        buttonCreate.setText("Ajouter un élève");
+                        Button buttonCreateEleve = new Button();
+                        buttonCreateEleve.setText("Ajouter un élève");
 
-                        Button buttonDelete = new Button();
-                        buttonDelete.setText("Supprimer l'élève");
+                        Button buttonDeleteEleve = new Button();
+                        buttonDeleteEleve.setText("Supprimer l'élève");
 
                         Button buttonRetour = new Button();
                         buttonRetour.setText("Retour à la liste des classe..");
@@ -211,11 +504,11 @@ public class conn extends Application {
                         gridPane.setVgap(8);
                         gridPane.setHgap(10);
                         gridPane.add(buttonRetour, 0, 0);
-                        gridPane.add(listView, 0, 1);
-                        gridPane.add(buttonRead, 0, 2);
-                        gridPane.add(buttonUpdate, 0, 3);
-                        gridPane.add(buttonCreate, 0, 4);
-                        gridPane.add(buttonDelete, 0, 5);
+                        gridPane.add(listViewEleve, 0, 1);
+                        gridPane.add(buttonReadEleve, 0, 2);
+                        gridPane.add(buttonUpdateEleve, 0, 3);
+                        gridPane.add(buttonCreateEleve, 0, 4);
+                        gridPane.add(buttonDeleteEleve, 0, 5);
 
                         layoutAccueil.getChildren().addAll(gridPane);
 
@@ -232,7 +525,7 @@ public class conn extends Application {
                             }
                         });
 
-                        buttonRead.setOnAction(new EventHandler<ActionEvent>() {
+                        buttonReadEleve.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
                                 Number comparateur = -1;
@@ -273,7 +566,7 @@ public class conn extends Application {
                                     Scene secondScene = new Scene(secondaryLayout, 540, 500);
                                     // New window (Stage)
                                     Stage newWindow = new Stage();
-                                    newWindow.setTitle("Consultation du compte de " + listView.getSelectionModel().getSelectedItem().getPrenomEleve() + " " + listView.getSelectionModel().getSelectedItem().getNomEleve());
+                                    newWindow.setTitle("Consultation du compte de " + listViewEleve.getSelectionModel().getSelectedItem().getPrenomEleve() + " " + listViewEleve.getSelectionModel().getSelectedItem().getNomEleve());
                                     newWindow.setScene(secondScene);
                                     // Set position of second window, related to primary window.
                                     newWindow.setX(stage.getX() + 200);
@@ -283,12 +576,12 @@ public class conn extends Application {
                             }
                         });
 
-                        buttonUpdate.setOnAction(new EventHandler<ActionEvent>() {
+                        buttonUpdateEleve.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
                                 Number comparateur = -1;
                                 if (idEleve != comparateur) {
-                                    Label label = new Label("Modification du compte : " + listView.getSelectionModel().getSelectedItem().getPrenomEleve() + " " + listView.getSelectionModel().getSelectedItem().getNomEleve());
+                                    Label label = new Label("Modification du compte : " + listViewEleve.getSelectionModel().getSelectedItem().getPrenomEleve() + " " + listViewEleve.getSelectionModel().getSelectedItem().getNomEleve());
 
                                     Button buttonAnnuler = new Button();
                                     buttonAnnuler.setText("Annuler");
@@ -305,11 +598,11 @@ public class conn extends Application {
                                     TextArea mailTextArea = new TextArea();
                                     TextArea mdpTextArea = new TextArea();
 
-                                    nomTextArea.setText(listView.getSelectionModel().getSelectedItem().getNomEleve());
-                                    prenomTextArea.setText(listView.getSelectionModel().getSelectedItem().getPrenomEleve());
-                                    dateNaissanceTextArea.setText(listView.getSelectionModel().getSelectedItem().getDateNaissance());
-                                    mailTextArea.setText(listView.getSelectionModel().getSelectedItem().getMail());
-                                    mdpTextArea.setText(listView.getSelectionModel().getSelectedItem().getMdp());
+                                    nomTextArea.setText(listViewEleve.getSelectionModel().getSelectedItem().getNomEleve());
+                                    prenomTextArea.setText(listViewEleve.getSelectionModel().getSelectedItem().getPrenomEleve());
+                                    dateNaissanceTextArea.setText(listViewEleve.getSelectionModel().getSelectedItem().getDateNaissance());
+                                    mailTextArea.setText(listViewEleve.getSelectionModel().getSelectedItem().getMail());
+                                    mdpTextArea.setText(listViewEleve.getSelectionModel().getSelectedItem().getMdp());
 
                                     Button buttonModifier = new Button();
                                     buttonModifier.setText("Modifier");
@@ -340,7 +633,7 @@ public class conn extends Application {
 
                                     // New window (Stage)
                                     Stage newWindow = new Stage();
-                                    newWindow.setTitle("Modification du compte de " + listView.getSelectionModel().getSelectedItem().getPrenomEleve() + " " + listView.getSelectionModel().getSelectedItem().getNomEleve());
+                                    newWindow.setTitle("Modification du compte de " + listViewEleve.getSelectionModel().getSelectedItem().getPrenomEleve() + " " + listViewEleve.getSelectionModel().getSelectedItem().getNomEleve());
                                     newWindow.setScene(secondScene);
 
                                     // Set position of second window, related to primary window.
@@ -353,19 +646,19 @@ public class conn extends Application {
                                     buttonModifier.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override
                                         public void handle(ActionEvent event) {
-                                            listView.getSelectionModel().getSelectedItem().setNomEleve(nomTextArea.getText());
-                                            listView.getSelectionModel().getSelectedItem().setPrenomEleve(prenomTextArea.getText());
-                                            listView.getSelectionModel().getSelectedItem().setDateNaissance(dateNaissanceTextArea.getText());
-                                            listView.getSelectionModel().getSelectedItem().setMail(mailTextArea.getText());
-                                            listView.getSelectionModel().getSelectedItem().setMdp(mdpTextArea.getText());
+                                            listViewEleve.getSelectionModel().getSelectedItem().setNomEleve(nomTextArea.getText());
+                                            listViewEleve.getSelectionModel().getSelectedItem().setPrenomEleve(prenomTextArea.getText());
+                                            listViewEleve.getSelectionModel().getSelectedItem().setDateNaissance(dateNaissanceTextArea.getText());
+                                            listViewEleve.getSelectionModel().getSelectedItem().setMail(mailTextArea.getText());
+                                            listViewEleve.getSelectionModel().getSelectedItem().setMdp(mdpTextArea.getText());
 
                                             try {
-                                                elevesDao.updateEleve(listView.getSelectionModel().getSelectedItem());
+                                                elevesDao.updateEleve(listViewEleve.getSelectionModel().getSelectedItem());
                                             } catch (SQLException throwables) {
                                                 throwables.printStackTrace();
                                             }
 
-                                            listView.refresh();
+                                            listViewEleve.refresh();
                                             newWindow.close();
                                             windowEleves.show();
                                         }
@@ -374,7 +667,7 @@ public class conn extends Application {
                                     buttonAnnuler.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override
                                         public void handle(ActionEvent event) {
-                                            listView.refresh();
+                                            listViewEleve.refresh();
                                             newWindow.close();
                                             windowEleves.show();
                                         }
@@ -383,7 +676,7 @@ public class conn extends Application {
                             }
                         });
 
-                        buttonCreate.setOnAction(new EventHandler<ActionEvent>() {
+                        buttonCreateEleve.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
                                 Label Label = new Label("Creation d'un nouvel élève");
@@ -400,6 +693,7 @@ public class conn extends Application {
                                 Label labelMail = new Label("E-mail de l'élève : ");
                                 Label labelMdp = new Label("Mot de passe de l'élève : ");
                                 Label labelConfirmerMdp = new Label("Confirmer le mot de passe : ");
+                                Label labelInfo = new Label("");
 
                                 TextArea nomTextArea = new TextArea();
                                 TextArea prenomTextArea = new TextArea();
@@ -427,6 +721,7 @@ public class conn extends Application {
                                 gridPane.add(confirmerMdpTextArea, 1, 6);
                                 gridPane.add(buttonCreerEleve, 0, 7);
                                 gridPane.add(buttonAnnulerCreation, 1, 7);
+                                gridPane.add(labelInfo, 1, 7);
 
                                 StackPane secondaryLayout = new StackPane();
                                 secondaryLayout.getChildren().add(gridPane);
@@ -447,16 +742,33 @@ public class conn extends Application {
                                 buttonCreerEleve.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override
                                     public void handle(ActionEvent event) {
-                                        listView.refresh();
-                                        newWindow.close();
-                                        windowEleves.show();
+                                        System.out.println(mdpTextArea.getText()+" "+confirmerMdpTextArea.getText());
+                                        if(mdpTextArea.getText().equals(confirmerMdpTextArea.getText())){
+                                            listViewEleve.refresh();
+                                            newWindow.close();
+                                            windowEleves.show();
+                                            Eleve e = new Eleve();
+                                            e.setNomEleve(nomTextArea.getText());
+                                            e.setPrenomEleve(prenomTextArea.getText());
+                                            e.setDateNaissance(dateNaissanceTextArea.getText());
+                                            e.setMail(mailTextArea.getText());
+                                            e.setMdp(mdpTextArea.getText());
+                                            e.setIdClasse((int) idClasse);
+                                            try {
+                                                elevesDao.addEleve(e);
+                                            } catch (SQLException throwables) {
+                                                throwables.printStackTrace();
+                                            }
+                                        }else{
+                                            labelInfo.setTextFill(Color.FIREBRICK);
+                                            labelInfo.setText("Mot de passe non identique");                                        }
                                     }
                                 });
 
                                 buttonAnnulerCreation.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override
                                     public void handle(ActionEvent event) {
-                                        listView.refresh();
+                                        listViewEleve.refresh();
                                         newWindow.close();
                                         windowEleves.show();
                                     }
@@ -464,12 +776,12 @@ public class conn extends Application {
                             }
                         });
 
-                        buttonDelete.setOnAction(new EventHandler<ActionEvent>() {
+                        buttonDeleteEleve.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
                                 Number comparateur = -1;
                                 if (idEleve != comparateur) {
-                                    Label Label = new Label("Confirmer la suppression du compte de l'élève " + listView.getSelectionModel().getSelectedItem().getPrenomEleve() + " " + listView.getSelectionModel().getSelectedItem().getNomEleve() + "...");
+                                    Label Label = new Label("Confirmer la suppression du compte de l'élève " + listViewEleve.getSelectionModel().getSelectedItem().getPrenomEleve() + " " + listViewEleve.getSelectionModel().getSelectedItem().getNomEleve() + "...");
 
                                     Button buttonValider = new Button();
                                     buttonValider.setText("Supprimer");
@@ -487,11 +799,11 @@ public class conn extends Application {
 
                                     StackPane secondaryLayout = new StackPane();
                                     secondaryLayout.getChildren().add(gridPaneSupprimer);
-                                    Scene secondScene = new Scene(secondaryLayout, 410, 100);
+                                    Scene secondScene = new Scene(secondaryLayout, 450, 100);
 
                                     // New window (Stage)
                                     Stage newWindow = new Stage();
-                                    newWindow.setTitle("Suppression du compte de l'élève " + listView.getSelectionModel().getSelectedItem().getPrenomEleve() + " " + listView.getSelectionModel().getSelectedItem().getNomEleve());
+                                    newWindow.setTitle("Suppression du compte de l'élève " + listViewEleve.getSelectionModel().getSelectedItem().getPrenomEleve() + " " + listViewEleve.getSelectionModel().getSelectedItem().getNomEleve());
                                     newWindow.setScene(secondScene);
 
                                     // Set position of second window, related to primary window.
@@ -504,7 +816,7 @@ public class conn extends Application {
                                     buttonValider.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override
                                         public void handle(ActionEvent event) {
-                                            listView.refresh();
+                                            listViewEleve.refresh();
                                             newWindow.close();
                                             windowEleves.show();
                                         }
@@ -513,7 +825,7 @@ public class conn extends Application {
                                     buttonAnnuler.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override
                                         public void handle(ActionEvent event) {
-                                            listView.refresh();
+                                            listViewEleve.refresh();
                                             newWindow.close();
                                             windowEleves.show();
                                         }
