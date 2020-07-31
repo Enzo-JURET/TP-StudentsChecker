@@ -145,6 +145,8 @@ public class conn extends Application {
                     public void handle(ActionEvent event) {
                         windowClasses.close();
                         windowConnexion.show();
+                        log.deconnection();
+                        labelmsg.setText("vous avez ete deconnecte");
                     }
                 });
 

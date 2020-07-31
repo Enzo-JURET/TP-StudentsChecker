@@ -104,4 +104,8 @@ public class Login {
             return false;
     }
 
+    public void deconnection(){
+        this.setConnecte(false);
+    }
+
 }
